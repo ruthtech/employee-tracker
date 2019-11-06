@@ -3,7 +3,7 @@ const inquirer = require("inquirer");
 /*
   Start of calls to the database 
 */
-async function getManagers() {
+function getManagers() {
     return [
         "manager 1",
         "manager 2",
@@ -14,7 +14,7 @@ async function getManagers() {
 
 }
 
-async function getRoles() {
+function getRoles() {
     return [
         "role 1",
         "role 2",
@@ -24,7 +24,7 @@ async function getRoles() {
     ];
 }
 
-async function getEmployees() {
+function getEmployees() {
     return [
         "employee 1",
         "employee 2",
@@ -35,31 +35,35 @@ async function getEmployees() {
 }
 
 async function viewAllRoles() {
-
+    console.log("view all roles");
 }
 
 async function viewAllEmployees() {
+    console.log("view all employees");
 
 }
 
 async function viewAllEmployeesByDepartment() {
+    console.log("view all employees by department");
 
 }
 
 async function viewAllEmployeesByManager() {
+    console.log("view all employees by manager");
 
 }
 
 async function updateEmployee(employeeInfo) {
+    console.log(`updateEmployee with info: ${employeeInfo}`);
 
 }
 
 async function addEmployee(employeeInfo) {
-
+    console.log(`addEmployee with info: ${employeeInfo}`);
 }
 
 async function removeEmployee(employeeInfo) {
-
+    console.log(`removeEmployee with info: ${employeeInfo}`);
 }
 
 /* 
