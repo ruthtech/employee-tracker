@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
 let Database = require("./async-db");
 let mysql = require("mysql");
+let cTable = require("console.table");
 
 const db = new Database({
     host: "localhost",
@@ -13,67 +14,88 @@ const db = new Database({
 /*
   Start of calls to the database 
 */
-function getManagers() {
-    return [
-        "manager 1",
-        "manager 2",
-        "manager 3",
-        "manager 4",
-        "manager 5"
-    ];
+async function getManagerNames() {
+    let query = "SELECT * FROM employee WHERE manager_id IS NULL";
+
+    const rows = await db.query(query);
+    //console.log("number of rows returned " + rows.length);
+    let employeeNames = [];
+    for(const employee of rows) {
+        employeeNames.push(employee.first_name + " " + employee.last_name);
+    }
+    return employeeNames;
+}
+
+async function getRoles() {
+    let query = "SELECT title FROM role";
+    const rows = await db.query(query);
+    //console.log("Number of rows returned: " + rows.length);
+
+    let roles = [];
+    for(const row of rows) {
+        roles.push(row.title);
+    }
+
+    return roles;
+}
+
+// need to find the role.id of the named role
+async function getRoleId(roleName) {
 
 }
 
-function getRoles() {
-    return [
-        "role 1",
-        "role 2",
-        "role 3",
-        "role 4",
-        "role 5"
-    ];
+// need to find the employee.id of the named manager
+function getEmployeeId(fullName) {
+    // First split the name into first name and last name
+    let employeeName = fullName.split(" ");
+
 }
 
+/*
+RowDataPacket {
+    id: 14,
+    first_name: 'Cyrus',
+    last_name: 'Smith',
+    role_id: 4,
+    manager_id: 3
+  }
+*/
 async function getEmployeeNames() {
     let query = "SELECT * FROM employee";
 
     const rows = await db.query(query);
-    console.log(`Retrieved ${rows.length}`, rows);
-
     let employeeNames = [];
-    for(const employee of employees) {
+    for(const employee of rows) {
         employeeNames.push(employee.first_name + " " + employee.last_name);
     }
     return employeeNames;
 }
 
 async function viewAllRoles() {
-    console.log("view all roles");
+    console.log("");
     // SELECT * FROM role;
     let query = "SELECT * FROM role";
-
     const rows = await db.query(query);
-    console.log(`Retrieved ${rows.length}`, rows);
-
+    console.table(rows);
     return rows;
 }
 
 async function viewAllEmployees() {
-    console.log("view all employees");
+    console.log("");
+
     // SELECT * FROM employee;
     let query = "SELECT * FROM employee";
     const rows = await db.query(query);
-    console.log(`Retrieved ${rows.length}`, rows);
+    console.table(rows);
 }
 
 async function viewAllEmployeesByDepartment() {
     // View all employees by department
     // SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);
-    console.log("view all employees by department");
+    console.log("");
     let query = "SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);";
     const rows = await db.query(query);
-    console.log(`Retrieved ${rows.length}`, rows);
-
+    console.table(rows);
 }
 
 async function viewAllEmployeesByManager() {
@@ -82,20 +104,45 @@ async function viewAllEmployeesByManager() {
 
 }
 
-async function updateEmployee(employeeInfo) {
-    console.log(`updateEmployee with info: ${employeeInfo}`);
+async function updateEmployeeRole(employeeInfo) {
+    console.log(`updateEmployeeRole with info: ${employeeInfo}`);
+
+}
+
+async function addDepartment(departmentInfo) {
 
 }
 
 async function addEmployee(employeeInfo) {
     console.log(`addEmployee with info: ${employeeInfo}`);
-    // INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Hope", 8, 5);
+    console.log(`${employeeInfo}`);
+    
+    // TODO need to find the role.id of the named role
+    // TODO need to find the employee.id of the named manager
 
+    // INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Hope", 8, 5);
+    let query = "INSERT into employee (first_name, last_name, role, manager_id) VALUES ?";
+    let args = [employeeInfo.first_name, employeeInfo.last_name, employeeInfo.role_id, manager];
+//    const rows = await db.query(query, args);
+//    console.table(rows);
+    console.log(args);
 }
 
 async function removeEmployee(employeeInfo) {
-    console.log(`removeEmployee with info: ${employeeInfo}`);
+    const employeeName = employeeInfo.employeeName.split(" ");
+    console.log(`removeEmployee with info: ${employeeName[0]} ${employeeName[1]}`);
     // DELETE from employee WHERE first_name="Cyrus" AND last_name="Smith";
+    let query = "DELETE from employee WHERE first_name=? AND last_name=?";
+    let args = [employeeName[0], employeeName[1]];
+    const rows = await db.query(query, args);
+}
+
+async function addDepartment(departmentInfo) {
+    const departmentName = departmentInfo.departmentName;
+    let query = 'INSERT into department (name) VALUES (?)';
+    let args = [departmentName];
+    const rows = await db.query(query, args);
+    console.log(`added department named ${departmentName}`);
 }
 
 /* 
@@ -110,42 +157,42 @@ async function mainPrompt() {
                 message: "What would you like to do?",
                 name: "action",
                 choices: [
-                  "View all employees",
-                  "View all employees by department",
- //                 "View all employees by manager",
                   "Add department",
                   "Add employee",
                   "Add role",
-//                  "Update employee info",
-//                  "Remove employee",
+                  "Remove employee",
                   "Update employee role",
-//                  "Update employee manager",
+                  "View all employees",
+                  "View all employees by department",
                   "View all roles",
+ //                 "View all employees by manager",
+//                  "Update employee info",
+//                  "Update employee manager",
                   "Exit"
                 ]
             }
         ])
 }
 
-async function getEmployeeInfo() {
-    const managers = await getManagers();
+async function getAddEmployeeInfo() {
+    const managers = await getManagerNames();
     const roles = await getRoles();
     return inquirer
         .prompt([
             {
                 type: "input",
-                name: "name",
+                name: "first_name",
                 message: "What is the employee's first name?"
             },
             {
                 type: "input",
-                name: "name",
+                name: "last_name",
                 message: "What is the employee's last name?"
             },
             {
                 type: "list",
                 message: "What is the employee's role?",
-                name: "action",
+                name: "role",
                 choices: [
                     // populate from db
                     ...roles
@@ -154,7 +201,7 @@ async function getEmployeeInfo() {
             {
                 type: "list",
                 message: "Who is the employee's manager?",
-                name: "action",
+                name: "manager",
                 choices: [
                     // populate from db
                     ...managers
@@ -165,14 +212,14 @@ async function getEmployeeInfo() {
 
 async function getUpdateEmployeeInfo() {
     const employees = getEmployeeNames();
-    const managers = await getManagers();
+    const managers = await getManagerNames();
     const roles = await getRoles();
     return inquirer
         .prompt([
             {
                 type: "list",
                 message: "Which employee do you want to update?",
-                name: "action",
+                name: "employeeName",
                 choices: [
                     // populate from db
                     ...employees
@@ -181,7 +228,7 @@ async function getUpdateEmployeeInfo() {
             {
                 type: "list",
                 message: "What is the employee's role?",
-                name: "action",
+                name: "role",
                 choices: [
                     // populate from db
                     ...roles
@@ -190,7 +237,7 @@ async function getUpdateEmployeeInfo() {
             {
                 type: "list",
                 message: "Who is the employee's manager?",
-                name: "action",
+                name: "manager",
                 choices: [
                     // populate from db
                     ...managers
@@ -207,11 +254,22 @@ async function getRemoveEmployeeInfo() {
         {
             type: "list",
             message: "Which employee do you want to remove?",
-            name: "action",
+            name: "employeeName",
             choices: [
                 // populate from db
                 ...employees
             ]
+        }
+    ])
+}
+
+async function getDepartmentInfo() {
+    return inquirer
+    .prompt([
+        {
+            type: "input",
+            message: "What is the name of the new department?",
+            name: "departmentName"
         }
     ])
 }
@@ -224,7 +282,7 @@ async function getUpdateEmployeeRoleInfo() {
             {
                 type: "list",
                 message: "Which employee do you want to update?",
-                name: "action",
+                name: "employeeName",
                 choices: [
                     // populate from db
                     ...employees
@@ -233,7 +291,7 @@ async function getUpdateEmployeeRoleInfo() {
             {
                 type: "list",
                 message: "What is the employee's role?",
-                name: "action",
+                name: "role",
                 choices: [
                     // populate from db
                     ...roles
@@ -245,13 +303,13 @@ async function getUpdateEmployeeRoleInfo() {
 
 async function getUpdateEmployeeManagerInfo() {
     const employees = getEmployeeNames();
-    const managers = await getManagers();
+    const managers = await getManagerNames();
     return inquirer
         .prompt([
             {
                 type: "list",
                 message: "Which employee do you want to update?",
-                name: "action",
+                name: "employeeName",
                 choices: [
                     // populate from db
                     ...employees
@@ -260,7 +318,7 @@ async function getUpdateEmployeeManagerInfo() {
             {
                 type: "list",
                 message: "Who is the employee's manager?",
-                name: "action",
+                name: "managerName",
                 choices: [
                     // populate from db
                     ...managers
@@ -276,6 +334,27 @@ async function main() {
         const prompt = await mainPrompt();
 
         switch(prompt.action) {
+            case 'Add department': {
+                const newDepartmentName = await getDepartmentInfo();
+                await addDepartment(newDepartmentName);
+                break;
+            }
+
+            case 'Add employee': {
+                const newEmployee = await getAddEmployeeInfo();
+                console.log("add an employee");
+                console.log(newEmployee);
+                await addEmployee(newEmployee);
+                break;
+            }
+
+            case 'Add role': {
+                const newRole = await getRoleInfo();
+                console.log("add a role");
+                await addEmployee(newRole);
+                break;
+            }
+
             case 'View all employees': {
                 await viewAllEmployees();
                 break;
@@ -288,12 +367,6 @@ async function main() {
 
             case 'View all employees by manager': {
                 await viewAllEmployeesByManager();
-                break;
-            }
-
-            case 'Add employee': {
-                const newEmployee = await getEmployeeInfo();
-                await addEmployee(newEmployee);
                 break;
             }
 
@@ -311,7 +384,7 @@ async function main() {
             
             case 'Update employee role': {
                 const employee = await getUpdateEmployeeRoleInfo();
-                await updateEmployee(employee);
+                await updateEmployeeRole(employee);
                 break;
             }
 
@@ -327,7 +400,7 @@ async function main() {
 
             case 'Exit':
                 exitLoop = true;
-                break;
+                return;
 
             default:
                 console.log(`Internal warning. Shouldn't get here. action was ${prompt.action}`);
@@ -335,4 +408,11 @@ async function main() {
     }
 }
 
+console.log("here");
 main();
+
+// async function test() {
+//      const employees = await getManagerNames();
+//      console.log(employees);
+// }
+// test();
