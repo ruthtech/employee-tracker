@@ -51,7 +51,15 @@ async function getDepartmentNames() {
     return departments;
 }
 
-// need to find the role.id of the named role
+// Given the name of the department, what is its id?
+async function getDepartmentId(departmentName) {
+    let query = "SELECT * FROM department WHERE department.name=?";
+    let args = [departmentName];
+    const rows = await db.query(query, args);
+    return rows[0].id;
+}
+
+// Given the name of the role, what is its id?
 async function getRoleId(roleName) {
     let query = "SELECT * FROM role WHERE role.title=?";
     let args = [roleName];
@@ -185,11 +193,16 @@ async function addDepartment(departmentInfo) {
 
 async function addRole(roleInfo) {
     // INSERT into role (title, salary, department_id) VALUES ("Sales Manager", 100000, 1);
-    // const departmentName = departmentInfo.departmentName;
-    // let query = 'INSERT into role (title, salary, department_id) VALUES (?,?,?)';
-    // let args = [departmentName];
-    // const rows = await db.query(query, args);
-    // console.log(`added department named ${departmentName}`);
+    // roleInfo.roleName, .departmentName, salary
+    const departmentId = await getDepartmentId(roleInfo.departmentName);
+    console.log("Department name: " + roleInfo.departmentName);
+    console.log("Department Id: " + departmentId);
+    const salary = roleInfo.salary;
+    const title = roleInfo.roleName;
+    let query = 'INSERT into role (title, salary, department_id) VALUES (?,?,?)';
+    let args = [title, salary, departmentId];
+    const rows = await db.query(query, args);
+    console.log(`Added role ${title}`);
 }
 
 /* 
@@ -408,10 +421,7 @@ async function main() {
 main();
 
 // async function test() {
-//      let employees = getFirstAndLastName("Mary Kay Ash");
-//      console.log(employees);
-
-//      employees = getFirstAndLastName("Anton MacGyver");
+//      let employees = await getDepartmentId("Bob");
 //      console.log(employees);
 // }
-//test();
+// test();
