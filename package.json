@@ -9,6 +9,7 @@
   "author": "Ruth Lee",
   "license": "MIT",
   "dependencies": {
+    "console.table": "^0.10.0",
     "inquirer": "^7.0.0",
     "mysql": "^2.17.1"
   }
