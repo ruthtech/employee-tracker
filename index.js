@@ -1,5 +1,15 @@
 const inquirer = require("inquirer");
+let Database = require("./async-db");
+let mysql = require("mysql");
 
+const db = new Database({
+    host: "localhost",
+    port: 3306,
+    user: "root",
+    password: "Shifting Shadows",
+    database: "cms"
+  });
+  
 /*
   Start of calls to the database 
 */
@@ -24,34 +34,51 @@ function getRoles() {
     ];
 }
 
-async function getEmployees() {
-    return $.ajax({
-        url: "/employee",
-        method: "GET"
-    });
+async function getEmployeeNames() {
+    let query = "SELECT * FROM employee";
+
+    const rows = await db.query(query);
+    console.log(`Retrieved ${rows.length}`, rows);
+
+    let employeeNames = [];
+    for(const employee of employees) {
+        employeeNames.push(employee.first_name + " " + employee.last_name);
+    }
+    return employeeNames;
 }
 
 async function viewAllRoles() {
     console.log("view all roles");
     // SELECT * FROM role;
+    let query = "SELECT * FROM role";
+
+    const rows = await db.query(query);
+    console.log(`Retrieved ${rows.length}`, rows);
+
+    return rows;
 }
 
 async function viewAllEmployees() {
     console.log("view all employees");
     // SELECT * FROM employee;
-
+    let query = "SELECT * FROM employee";
+    const rows = await db.query(query);
+    console.log(`Retrieved ${rows.length}`, rows);
 }
 
 async function viewAllEmployeesByDepartment() {
-//    --  View all employees by department
+    // View all employees by department
     // SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);
     console.log("view all employees by department");
+    let query = "SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);";
+    const rows = await db.query(query);
+    console.log(`Retrieved ${rows.length}`, rows);
 
 }
 
 async function viewAllEmployeesByManager() {
     console.log("view all employees by manager");
-    
+
 
 }
 
@@ -137,7 +164,7 @@ async function getEmployeeInfo() {
 }
 
 async function getUpdateEmployeeInfo() {
-    const employees = getEmployees();
+    const employees = getEmployeeNames();
     const managers = await getManagers();
     const roles = await getRoles();
     return inquirer
@@ -174,7 +201,7 @@ async function getUpdateEmployeeInfo() {
 }
 
 async function getRemoveEmployeeInfo() {
-    const employees = await getEmployees();
+    const employees = await getEmployeeNames();
     return inquirer
     .prompt([
         {
@@ -190,7 +217,7 @@ async function getRemoveEmployeeInfo() {
 }
 
 async function getUpdateEmployeeRoleInfo() {
-    const employees = getEmployees();
+    const employees = getEmployeeNames();
     const roles = await getRoles();
     return inquirer
         .prompt([
@@ -217,7 +244,7 @@ async function getUpdateEmployeeRoleInfo() {
 }
 
 async function getUpdateEmployeeManagerInfo() {
-    const employees = getEmployees();
+    const employees = getEmployeeNames();
     const managers = await getManagers();
     return inquirer
         .prompt([
