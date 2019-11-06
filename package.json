@@ -4,7 +4,7 @@
   "description": "Manage a company's employees using node, inquirer, and MySQL.",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose test/*"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ruth Lee",
   "license": "MIT",
