@@ -68,15 +68,14 @@ async function getRoleId(roleName) {
 }
 
 // need to find the employee.id of the named manager
-function getEmployeeId(fullName) {
+async function getEmployeeId(fullName) {
     // First split the name into first name and last name
-    let employeeName = getFirstAndLastName(fullName);
+    let employee = getFirstAndLastName(fullName);
 
-}
-
-// find the department id with the given name
-async function getDepartment(departmentName) {
-
+    let query = 'SELECT id FROM employee WHERE employee.first_name=? AND employee.last_name=?';
+    let args=[employee[0], employee[1]];
+    const rows = await db.query(query, args);
+    return rows[0].id;
 }
 
 async function getEmployeeNames() {
@@ -160,18 +159,14 @@ async function updateEmployeeRole(employeeInfo) {
 }
 
 async function addEmployee(employeeInfo) {
-    console.log(`addEmployee with info: ${employeeInfo}`);
-    console.log(`${employeeInfo}`);
-    
-    // TODO need to find the role.id of the named role
-    // TODO need to find the employee.id of the named manager
+    let roleId = await getRoleId(employeeInfo.role);
+    let managerId = await getEmployeeId(employeeInfo.manager);
 
     // INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Hope", 8, 5);
-    let query = "INSERT into employee (first_name, last_name, role, manager_id) VALUES ?";
-    let args = [employeeInfo.first_name, employeeInfo.last_name, employeeInfo.role_id, manager];
-//    const rows = await db.query(query, args);
-//    console.table(rows);
-    console.log(args);
+    let query = "INSERT into employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)";
+    let args = [employeeInfo.first_name, employeeInfo.last_name, roleId, managerId];
+    const rows = await db.query(query, args);
+    console.log(`Added employee ${employeeInfo.first_name} ${employeeInfo.last_name}.`);
 }
 
 async function removeEmployee(employeeInfo) {
@@ -193,10 +188,7 @@ async function addDepartment(departmentInfo) {
 
 async function addRole(roleInfo) {
     // INSERT into role (title, salary, department_id) VALUES ("Sales Manager", 100000, 1);
-    // roleInfo.roleName, .departmentName, salary
     const departmentId = await getDepartmentId(roleInfo.departmentName);
-    console.log("Department name: " + roleInfo.departmentName);
-    console.log("Department Id: " + departmentId);
     const salary = roleInfo.salary;
     const title = roleInfo.roleName;
     let query = 'INSERT into role (title, salary, department_id) VALUES (?,?,?)';
