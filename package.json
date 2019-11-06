@@ -1,0 +1,14 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "Manage a company's employees using node, inquirer, and MySQL.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --verbose test/*"
+  },
+  "author": "Ruth Lee",
+  "license": "MIT",
+  "dependencies": {
+    "inquirer": "^7.0.0"
+  }
+}
