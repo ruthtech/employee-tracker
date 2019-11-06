@@ -24,32 +24,34 @@ function getRoles() {
     ];
 }
 
-function getEmployees() {
-    return [
-        "employee 1",
-        "employee 2",
-        "employee 3",
-        "employee 4",
-        "employee 5"
-    ];
+async function getEmployees() {
+    return $.ajax({
+        url: "/employee",
+        method: "GET"
+    });
 }
 
 async function viewAllRoles() {
     console.log("view all roles");
+    // SELECT * FROM role;
 }
 
 async function viewAllEmployees() {
     console.log("view all employees");
+    // SELECT * FROM employee;
 
 }
 
 async function viewAllEmployeesByDepartment() {
+//    --  View all employees by department
+    // SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);
     console.log("view all employees by department");
 
 }
 
 async function viewAllEmployeesByManager() {
     console.log("view all employees by manager");
+    
 
 }
 
@@ -60,10 +62,13 @@ async function updateEmployee(employeeInfo) {
 
 async function addEmployee(employeeInfo) {
     console.log(`addEmployee with info: ${employeeInfo}`);
+    // INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Hope", 8, 5);
+
 }
 
 async function removeEmployee(employeeInfo) {
     console.log(`removeEmployee with info: ${employeeInfo}`);
+    // DELETE from employee WHERE first_name="Cyrus" AND last_name="Smith";
 }
 
 /* 
@@ -80,12 +85,14 @@ async function mainPrompt() {
                 choices: [
                   "View all employees",
                   "View all employees by department",
-                  "View all employees by manager",
+ //                 "View all employees by manager",
+                  "Add department",
                   "Add employee",
-                  "Update employee info",
-                  "Remove employee",
+                  "Add role",
+//                  "Update employee info",
+//                  "Remove employee",
                   "Update employee role",
-                  "Update employee manager",
+//                  "Update employee manager",
                   "View all roles",
                   "Exit"
                 ]
