@@ -6,7 +6,7 @@ const db = new Database({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "",
+    password: "Shifting Shadows",
     database: "cms"
   });
   
@@ -170,7 +170,7 @@ async function addEmployee(employeeInfo) {
 }
 
 async function removeEmployee(employeeInfo) {
-    const employeeName = getFirstAndLastName(employeeInfo);
+    const employeeName = getFirstAndLastName(employeeInfo.employeeName);
     // DELETE from employee WHERE first_name="Cyrus" AND last_name="Smith";
     let query = "DELETE from employee WHERE first_name=? AND last_name=?";
     let args = [employeeName[0], employeeName[1]];
