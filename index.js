@@ -401,6 +401,7 @@ async function main() {
 
             case 'Exit': {
                 exitLoop = true;
+                process.exit(0); // successful exit
                 return;
             }
 
@@ -410,10 +411,11 @@ async function main() {
     }
 }
 
+// Close your database connection when Node exits
+process.on("exit", async function(code) {
+    await db.close();
+    return console.log(`About to exit with code ${code}`);
+});
+
 main();
 
-// async function test() {
-//      let employees = await getDepartmentId("Bob");
-//      console.log(employees);
-// }
-// test();
