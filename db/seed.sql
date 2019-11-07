@@ -1,3 +1,5 @@
+USE cms;
+
 INSERT into department (name) VALUES ("Sales");
 INSERT into department (name) VALUES ("IT");
 INSERT into department (name) VALUES ("Bob");
