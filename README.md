@@ -43,12 +43,14 @@ There is no automated test suite for this command line application. Instead, I r
     8. "Remove employee" followed by "View all employees" to confirm.
     9. "Update employee role" followed by "View all employees" to confirm.
 
-You can see these tests run by viewing the provided MP4 file (./employee-tracker.mp4) 
+You can see these tests run by viewing the provided MP4 file 
+![Employee Tracker](./employee-tracker.mp4) 
 
 ## Deployment
 To deploy this on a live system, copy all of the files to your computer and follow the instructions in the "Installing" section followed by the "Getting Started" section. This is a command-line tool, not one that runs in the browser. There are no live pages to demonstrate. 
 
-You can see these tests run by viewing the provided MP4 file (./employee-tracker.mp4) 
+You can see these tests run by viewing the provided MP4 file 
+![Employee Tracker](./employee-tracker.mp4) 
 
 ## Built With
 * [Visual Studio Code] https://code.visualstudio.com/docs/setup/setup-overview
