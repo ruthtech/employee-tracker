@@ -50,7 +50,7 @@ You can see these tests run by viewing the provided MP4 file
 To deploy this on a live system, copy all of the files to your computer and follow the instructions in the "Installing" section followed by the "Getting Started" section. This is a command-line tool, not one that runs in the browser. There are no live pages to demonstrate. 
 
 You can see these tests run by viewing the provided MP4 file 
-![Employee Tracker](./employee-tracker.mp4) 
+![Employee Tracker](employee-tracker.mp4) 
 
 ## Built With
 * [Visual Studio Code] https://code.visualstudio.com/docs/setup/setup-overview
