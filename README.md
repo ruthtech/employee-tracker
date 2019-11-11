@@ -4,10 +4,11 @@ This command-line application manages a company's employees using node, inquirer
 
 ## Getting Started
 You need to set up your MySQL database before you can run the code. 
+
     1. Download and unzip the code, and install the prerequisites, as explained in the "Installing" section of this README.
     2. In your "employee-tracker-master" directory there is a "db" directory. In that directory there are two files: cms.sql and seed.sql. 
-       a. Open your MySQL Workbench and run cms.sql to create the database and tables.
-       b. Then run seed.sql to populate the database with some data. (Bonus points if you recognize the people in your database.)
+        a. Open your MySQL Workbench and run cms.sql to create the database and tables.
+        b. Then run seed.sql to populate the database with some data. (Bonus points if you recognize the people in your database.)
     3. Now that your database is ready to be queried, open index.js and enter your MySQL root password on line 9.
     4. Open a Git terminal. Type "node index.js".
 
@@ -42,10 +43,12 @@ There is no automated test suite for this command line application. Instead, I r
     8. "Remove employee" followed by "View all employees" to confirm.
     9. "Update employee role" followed by "View all employees" to confirm.
 
-You can see these tests run by viewing the provided MP4 file (employee-tracker.mp4)
+You can see these tests run by viewing the provided MP4 file (./employee-tracker.mp4) 
 
 ## Deployment
 To deploy this on a live system, copy all of the files to your computer and follow the instructions in the "Installing" section followed by the "Getting Started" section. This is a command-line tool, not one that runs in the browser. There are no live pages to demonstrate. 
+
+You can see these tests run by viewing the provided MP4 file (./employee-tracker.mp4) 
 
 ## Built With
 * [Visual Studio Code] https://code.visualstudio.com/docs/setup/setup-overview
